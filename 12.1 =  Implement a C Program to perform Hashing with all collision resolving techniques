@@ -1,0 +1,73 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure for linked list
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Hash table structure
+struct HashTable {
+    int size;
+    struct Node** table;
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to create a hash table
+struct HashTable* createHashTable(int size) {
+    struct HashTable* hashTable = (struct HashTable*)malloc(sizeof(struct HashTable));
+    hashTable->size = size;
+    hashTable->table = (struct Node**)malloc(size * sizeof(struct Node*));
+    for (int i = 0; i < size; i++) {
+        hashTable->table[i] = NULL;
+    }
+    return hashTable;
+}
+
+// Function to insert a value into the hash table
+void insert(struct HashTable* hashTable, int data) {
+    int index = data % hashTable->size;
+    struct Node* newNode = createNode(data);
+    if (hashTable->table[index] == NULL) {
+        hashTable->table[index] = newNode;
+    } else {
+        struct Node* current = hashTable->table[index];
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+// Function to print the hash table
+void printHashTable(struct HashTable* hashTable) {
+    for (int i = 0; i < hashTable->size; i++) {
+        printf("Index %d: ", i);
+        struct Node* current = hashTable->table[i];
+        while (current != NULL) {
+            printf("%d ", current->data);
+            current = current->next;
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    struct HashTable* hashTable = createHashTable(10);
+    insert(hashTable, 5);
+    insert(hashTable, 15);
+    insert(hashTable, 25);
+    insert(hashTable, 35);
+    insert(hashTable, 45);
+    insert(hashTable, 55);
+    printHashTable(hashTable);
+    return 0;
+}
